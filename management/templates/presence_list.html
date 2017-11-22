@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1> {{group}}</h1>
+
+<h3> Lista obecności: </h3>
+<ul>
+{% for child in children %}
+	<li> {{child}} </li>
+{% endfor %}
+
+<form>
+	{{ formset.as_p }}
+</form>
+
+</ul>
+</br>
+{% endblock %}
