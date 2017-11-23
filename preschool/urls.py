@@ -15,12 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from management.views import (MainView, GroupListView, PresenceDateView, PresenceListView)
+from management.views import (MainView, GroupView, GroupListView, AddChildView, 
+                        PresenceDateView, PresenceListView)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', MainView.as_view(), name="main"),
+    url(r'^group/$', GroupView.as_view(), name="group"),
     url(r'^group/(?P<group_id>(\d)+)$', GroupListView.as_view(), name="group_list"),
+    url(r'^group/(?P<group_id>(\d)+)/add_child', AddChildView.as_view(), name="add_child"),
     url(r'^group/(?P<group_id>(\d)+)/presence_date', PresenceDateView.as_view(), name="presence_date"),
-    url(r'^group/(?P<group_id>(\d)+)/presence_list', PresenceListView.as_view(), name="presence_list"),
+    url(r'^group/(?P<group_id>(\d)+)/presence_list/(?P<date>(\d{4}-\d{2}-\d{2}))/', 
+        PresenceListView.as_view(), name="presence_list"),
 ]
+

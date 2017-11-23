@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Lista grup </h1>
+<br>
+<ul>
+{% for group in groups %}
+	<li class="active"> <a href= "/group/{{group.id}}"> {{ group }} </a> </li>
+{% endfor %}
+
+</ul>
+
+{% endblock %}

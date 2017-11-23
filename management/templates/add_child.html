@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h3> Dodaj osobę </h3>
+<br/>
 <form method="post", action="">
     {% csrf_token %}
-    {{ form }}
-    <button class="btn-info" type="submit"> Dalej </button>
+    {{ form.as_p }}
+    <input type="submit" />
 </form>
 {% endblock %}

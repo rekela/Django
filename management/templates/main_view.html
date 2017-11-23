@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Lista grup </h1>
-
-<ul>
-{% for group in groups %}
-	<li> <a href= "/group/{{group.id}}"> {{group}} </a> </li>
-{% endfor %}
-
-</ul>
+<h3> Zaloguj się do aplikacji </h3>
+<br><br>
+<form method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" />
+</form>
 
 {% endblock %}
