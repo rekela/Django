@@ -78,24 +78,19 @@ PAID_HOURS = (
 		(5, "16:00")
 		)
 
+MEAL_LIST = (
+		(0, "śniadanie"),
+		(1, "drugie śniadanie"),
+		(2, "obiad"),
+		(3, "podwieczorek")
+		)
+
 
 class PresenceList(models.Model):
 	day = models.DateField()
 	present = models.NullBooleanField(default=False)
 	child = models.ForeignKey(Child)
 	additional_hour = models.IntegerField(choices=PAID_HOURS, null=True)
-    
-
-MEAL_LIST = (
-			(0, "śniadanie"),
-			(1, "drugie śniadanie"),
-			(2, "obiad"),
-			(3, "podwieczorek")
-		)
-
-
-class Meal(models.Model):
-	name = models.IntegerField(choices=MEAL_LIST)
-	price = models.FloatField()
-	presence = models.ForeignKey(PresenceList)
+	meal = models.IntegerField(choices=MEAL_LIST, null=True)
+	#price = models.FloatField()
 

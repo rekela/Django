@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Group, Child, Parent, Teacher, PresenceList, Meal
-from .forms import LoginForm, PresenceDateForm, AddChildForm, PresenceListForm 
+from .models import Group, Child, Parent, Teacher, PresenceList
+from .forms import LoginForm, PresenceDateForm, ChildForm, AddChildForm, PresenceListForm 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -41,6 +41,33 @@ class GroupListView(View):
 														"children": children})
 
 
+class ChildView(View):
+
+	def get(self, request, group_id, child_id):
+		group = Group.objects.get(pk=group_id)
+		child = Child.objects.get(pk=child_id)
+		form = AddChildForm(instance=child)
+		return render(request, "child.html", {"form": form})
+
+	def post(self, request, group_id, child_id):
+		group = Group.objects.get(pk=group_id)
+		child = Child.objects.get(pk=child_id)
+		form = AddChildForm(request.POST)
+		if form.is_valid():
+			child.first_name = form.cleaned_data['first_name']
+			child.last_name = form.cleaned_data['last_name']
+			child.kdr = form.cleaned_data['kdr']
+			child.start_hour = form.cleaned_data['start_hour']
+			child.end_hour = form.cleaned_data['end_hour']
+			child.breakfast = form.cleaned_data['breakfast']
+			child.brunch = form.cleaned_data['brunch']
+			child.dinner = form.cleaned_data['dinner']
+			child.supper = form.cleaned_data['supper']
+			child.group = form.cleaned_data['group']
+			child.save()
+			return HttpResponseRedirect('/group')
+
+
 class AddChildView(View):
 
 	def get(self, request, group_id):
@@ -74,17 +101,10 @@ class PresenceDateView(View):
 		return render(request, "presence_date.html", {"form": form,
 														"group": group})
 
-	# def form_valid(self, form): #jak wrzucić datę z form do url
-	# 	presence = PresenceList()
-	# 	presence.day = 
-	# 	if form.is_valid():
-	# 		return HttpResponseRedirect('presence_list')
-	# 	return super(PresenceDateView, self).form_valid(form)
-
 	def post(self, request, group_id): 
 		form = PresenceDateForm(request.POST)
 		if form.is_valid():
-			date_form = form.cleaned_data['day'] # przypisujemy datę z formularza do zmiennej, żeby wrzucić ją do formularza
+			date_form = form.cleaned_data['day'] 
 			return HttpResponseRedirect(reverse('presence_list', kwargs={"date": date_form, "group_id": group_id}))
 		return HttpResponseRedirect('presence_date')
 
@@ -93,7 +113,7 @@ class PresenceListView(View):
 
 	def get(self, request, group_id, date):
 		group = Group.objects.get(pk=group_id)
-		form = PresenceListForm(date=date, group=group) # musimy przekazać dwa argumenty z forms
+		form = PresenceListForm(date=date, group=group) 
 		children = Child.objects.filter(group=group_id).order_by("last_name")
 		return render(request, "presence_list.html", {"group": group,
 														"children": children,
@@ -104,10 +124,8 @@ class PresenceListView(View):
 		form = PresenceListForm(request.POST, date=date, group=group)
 		if form.is_valid():
 			for child in form.get_children(group=group):
-				PresenceList.objects.update_or_create(child=child, day=date, # metoda update_or_create służy do sprawdzenia czy mamy jakieś wpisy w bazie
-					defaults = {							# jeśli mamy wpis - wykona się update, jesli nie - utworzy się wpis
+				PresenceList.objects.update_or_create(child=child, day=date, 
+					defaults = {
 					'present': form.cleaned_data.get('child_{}_present'.format(child.id), False)
 					})
 			return HttpResponseRedirect('/group') 
-# presence = PresenceList()
-# presence.child.add()

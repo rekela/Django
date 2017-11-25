@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import (Group, Child, Parent, Teacher, PresenceList, Meal)
+from .models import (Group, Child, Parent, Teacher, PresenceList)
 
 # Register your models here.
 
@@ -26,9 +26,4 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @ admin.register(PresenceList)
 class PresenceListAdmin(admin.ModelAdmin):
-	pass
-
-
-@ admin.register(Meal)
-class MealAdmin(admin.ModelAdmin):
 	pass

@@ -9,15 +9,15 @@
 
 
 <h3> Lista dzieci: </h3>
-<table>
+
 {% for child in children %}
 
-<tr>
-	<td> {{ child }} </td>
-	<td> <button class="btn-default" type='submit'> <a href="/group/{{group.id}}/presence_list"> SZCZEGÓŁY </a> </button> </td>
-</tr>
+
+	<p> {{ child }}
+	<button class="btn-default" type='submit'> <a href="/group/{{group.id}}/{{child.id}}"> SZCZEGÓŁY </a> </button></p>
+
 {% endfor %}
-</table>
+
 <br>
 <button class='btn-default' type='submit'> <a href="/group/{{group.id}}/add_child"> DODAJ </a> </button>
 <br/>
