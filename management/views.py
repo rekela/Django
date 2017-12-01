@@ -128,4 +128,16 @@ class PresenceListView(View):
 					defaults = {
 					'present': form.cleaned_data.get('child_{}_present'.format(child.id), False)
 					})
-			return HttpResponseRedirect('/group') 
+			return HttpResponseRedirect(reverse('hours_and_meals', kwargs={"date": date, "group_id": group_id}))
+		return HttpResponseRedirect('hours_and_meals')
+			
+
+class HoursAndMealsView(View):
+
+	def get(self, request, group_id, date): 
+		group = Group.objects.get(pk=group_id)
+		form = HoursAndMealsForm(date=date, group=group)
+		children = Child.objects.filter(group=group_id).order_by("last_name")
+		return render(request, "hours_and_meals.html", {"group": group,
+														"children": children,
+														"form": form})

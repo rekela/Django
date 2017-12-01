@@ -32,13 +32,29 @@ class Child(models.Model):
 	supper = models.NullBooleanField(default=True)
 	group = models.ForeignKey(Group)
 
+
 	@property
 	def name(self):
 		return "{} {}".format(self.first_name, self.last_name)
 
+
 	def __str__(self):
 		return self.name
 
+
+	@property
+	def paid_hours(self):
+		paid_hours = 0 # zmienna do zliczania płatnych godzin
+		start = float(self.start_hour)
+		end = float(self.end_hour)
+		limit = 12 # zmienna do której przypisuję koniec bezpłatnych godzin (godz.12:00)
+
+		while (limit < end):
+			paid_hours += 1
+			limit += 1
+		if start < 7:
+			paid_hours += 0.5
+		return paid_hours
 
 
 class Parent(models.Model):
@@ -92,5 +108,34 @@ class PresenceList(models.Model):
 	child = models.ForeignKey(Child)
 	additional_hour = models.IntegerField(choices=PAID_HOURS, null=True)
 	meal = models.IntegerField(choices=MEAL_LIST, null=True)
-	#price = models.FloatField()
+	presence_breakfast = models.NullBooleanField(default=True)
+	presence_brunch = models.NullBooleanField(default=True)
+	presence_dinner = models.NullBooleanField(default=True)
+	presence_supper = models.NullBooleanField(default=True)
+	presence_six = models.NullBooleanField(default=True)
+	presence_twelve = models.NullBooleanField(default=True)
+	presence_thirteen = models.NullBooleanField(default=True)
+	presence_fourteen = models.NullBooleanField(default=True)
+	presence_fifteen = models.NullBooleanField(default=True)
+	presence_sixteen = models.NullBooleanField(default=True)
+	meal_price = models.FloatField(default=0)
+	hours_price = models.FloatField(default=0)
 
+	@property
+	def breakfast(self):
+		return self.presence_breakfast == Child.breakfast
+
+	@property
+	def brunch(self):
+		return self.presence_brunch == Child.brunch
+
+	@property
+	def dinner(self):
+		return self.presence_dinner == Child.dinner
+
+	@property
+	def supper(self):
+		return self.presence_supper == Child.supper
+
+# jeśli nieobecny -> wszytskie posiłki na null + wszytskie godziny dodatkowe na null
+# jeśli obecny --> posiłki i godziny dodatkowe przenosza sie z Child + można modyfikować posiłki (wszytskie) i godziny (tylko te spoza zadeklarowanych w umowie)

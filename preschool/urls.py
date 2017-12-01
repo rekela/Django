@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from management.views import (MainView, GroupView, GroupListView, ChildView, AddChildView, 
-                        PresenceDateView, PresenceListView)
+                        PresenceDateView, PresenceListView, HoursAndMealsView)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,7 +26,9 @@ urlpatterns = [
     url(r'^group/(?P<group_id>(\d)+)/(?P<child_id>(\d)+)', ChildView.as_view(), name="child"),
     url(r'^group/(?P<group_id>(\d)+)/add_child', AddChildView.as_view(), name="add_child"),
     url(r'^group/(?P<group_id>(\d)+)/presence_date', PresenceDateView.as_view(), name="presence_date"),
-    url(r'^group/(?P<group_id>(\d)+)/presence_list/(?P<date>(\d{4}-\d{2}-\d{2}))/', 
+    url(r'^group/(?P<group_id>(\d)+)/presence_list/(?P<date>(\d{4}-\d{2}-\d{2}))', 
         PresenceListView.as_view(), name="presence_list"),
+    url(r'^group/(?P<group_id>(\d)+)/presence_list/(?P<date>(\d{4}-\d{2}-\d{2}))/hours_and_meals', 
+        HoursAndMealsView.as_view(), name="hours_and_meals"),
 ]
 
