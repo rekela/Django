@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Lista nauczycieli: </h1>
+	{% for teacher in teachers %}
+	<p>	{{ teacher }}</p>
+	{% endfor %}
+<br>
+<button class='btn-default' type='submit'> <a href="/teachers/add"> DODAJ </a> </button>
+{% endblock %}

@@ -1,26 +1,13 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1> {{ group }} </h1>
-<h3> Nauczyciele: </h3>
-	{% for teacher in teachers %}
-	<p>	{{ teacher }}</p>
-	{% endfor %}
-
 
 <h3> Lista dzieci: </h3>
 
 {% for child in children %}
-
 
 	<p> {{ child }}
 	<button class="btn-default" type='submit'> <a href="/group/{{group.id}}/{{child.id}}"> SZCZEGÓŁY </a> </button></p>
 
 {% endfor %}
 
-<br>
-<button class='btn-default' type='submit'> <a href="/group/{{group.id}}/add_child"> DODAJ </a> </button>
-<br/>
-<br/>
-<button class='btn-default' type='submit'> <a href="/group/{{group.id}}/presence_date"> LISTA OBECNOŚCI </a> </button>
 {% endblock %}

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Group, Child, Parent, Teacher, PresenceList
-from .forms import LoginForm, PresenceDateForm, ChildForm, AddChildForm, PresenceListForm 
+from .forms import (LoginForm, PresenceDateForm, ChildForm, AddChildForm, 
+			PresenceListForm, AddTeacherForm)
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -23,6 +24,13 @@ class MainView(View):
 			return HttpResponseRedirect('/group')
 
 
+class ChildrenListView(View):
+
+	def get(self, request):
+		children = Child.objects.all().order_by("last_name")
+		return render(request, "children_list.html", {"children": children})
+		
+
 class GroupView(View):
 
 	def get(self, request):
@@ -36,7 +44,7 @@ class GroupListView(View):
 		group = Group.objects.get(pk=group_id)
 		teachers = Teacher.objects.filter(group=group_id)
 		children = Child.objects.filter(group=group_id).order_by("last_name")
-		return render(request, "children_list.html", {"group": group,
+		return render(request, "children_in_group.html", {"group": group,
 														"teachers": teachers,
 														"children": children})
 
@@ -141,3 +149,29 @@ class HoursAndMealsView(View):
 		return render(request, "hours_and_meals.html", {"group": group,
 														"children": children,
 														"form": form})
+
+
+
+class TeachersView(View):
+
+	def get(self, request):
+		teachers = Teacher.objects.all().order_by("last_name")
+		return render(request, "teachers.html", {"teachers": teachers})
+
+
+class AddTeacherView(View):
+
+	def get(self,request):
+		form = AddTeacherForm()
+		return render(request, "add_teachers.html", {"form": form})
+
+	def post(self, request):
+		form = AddTeacherForm(request.POST)
+		if form.is_valid():
+			teacher = Teacher.objects.create(first_name=form.cleaned_data['first_name'],
+										last_name=form.cleaned_data['last_name'],
+										group=form.cleaned_data['group'])
+			return HttpResponseRedirect('/group')
+		return HttpResponseRedirect('/teachers/add')
+
+# teachers = Teacher.objects.all()

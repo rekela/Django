@@ -92,3 +92,10 @@ class HoursAndMealsForm(Form):
 			self.fields['child_{}_presence_supper'.format(child.id)] = forms.NullBooleanField(initial=supper, label='Kolacja') 
 		
 			#self.fields['child_{}_present'.format(child.id)] = forms.IntegerField(label=child.name)
+
+
+
+class AddTeacherForm(ModelForm):
+	class Meta:
+		model = Teacher
+		fields = ('first_name', 'last_name', 'group')
