@@ -25,7 +25,6 @@ class Child(models.Model):
 	kdr = models.NullBooleanField(default=False)
 	start_hour = models.TimeField()
 	end_hour = models.TimeField()
-	# ilość godzin płatnych do wyliczenia w property - początek do 7, od 12 do end_hour
 	breakfast = models.NullBooleanField(default=True)
 	brunch = models.NullBooleanField(default=True)
 	dinner = models.NullBooleanField(default=True)
@@ -49,11 +48,18 @@ class Child(models.Model):
 		end = float(self.end_hour)
 		limit = 12 # zmienna do której przypisuję koniec bezpłatnych godzin (godz.12:00)
 
-		while (limit < end):
-			paid_hours += 1
-			limit += 1
-		if start < 7:
-			paid_hours += 0.5
+		if kdr == 0:
+			while (limit < end):
+				paid_hours += 1
+				limit += 1
+			if start < 7:
+				paid_hours += 0.5
+		else:
+			while (limit < end):
+				paid_hours += 0.5
+				limit += 1
+			if start < 7:
+				paid_hours += 0.25
 		return paid_hours
 
 
