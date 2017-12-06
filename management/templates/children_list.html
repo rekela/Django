@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3> Lista dzieci: </h3>
+<h3> Lista wszytskich dzieci: </h3>
+<br>
 
 {% for child in children %}
 
 	<p> {{ child }}
-	<button class="btn-default" type='submit'> <a href="/group/{{group.id}}/{{child.id}}"> SZCZEGÓŁY </a> </button></p>
+	<button class="btn-default" type='submit'> <a href="/group/{{child.group_id}}/{{child.id}}"> SZCZEGÓŁY </a> </button></p>
 
 {% endfor %}
 

@@ -5,7 +5,7 @@ from .models import Group, Child, Parent, Teacher, PresenceList
 
 
 class LoginForm(Form):
-	login = forms.CharField(label="Twój login", max_length=100)
+	username = forms.CharField(label="Twój login", max_length=100)
 	password = forms.CharField(label="Hasło", max_length=100, widget=forms.PasswordInput())
 
 
@@ -75,6 +75,7 @@ class HoursAndMealsForm(Form):
 
 		for child in self.get_children(group=group):
 			try:
+				presence = child.presencelist_set.get(day=date).present
 				breakfast = child.presencelist_set.get(day=date).presence_breakfast
 				brunch = child.presencelist_set.get(day=date).presence_brunch
 				dinner = child.presencelist_set.get(day=date).presence_dinner

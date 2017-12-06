@@ -114,34 +114,34 @@ class PresenceList(models.Model):
 	child = models.ForeignKey(Child)
 	additional_hour = models.IntegerField(choices=PAID_HOURS, null=True)
 	meal = models.IntegerField(choices=MEAL_LIST, null=True)
-	presence_breakfast = models.NullBooleanField(default=True)
-	presence_brunch = models.NullBooleanField(default=True)
-	presence_dinner = models.NullBooleanField(default=True)
-	presence_supper = models.NullBooleanField(default=True)
-	presence_six = models.NullBooleanField(default=True)
-	presence_twelve = models.NullBooleanField(default=True)
-	presence_thirteen = models.NullBooleanField(default=True)
-	presence_fourteen = models.NullBooleanField(default=True)
-	presence_fifteen = models.NullBooleanField(default=True)
-	presence_sixteen = models.NullBooleanField(default=True)
+	presence_breakfast = models.NullBooleanField(null=True)
+	presence_brunch = models.NullBooleanField(null=True)
+	presence_dinner = models.NullBooleanField(null=True)
+	presence_supper = models.NullBooleanField(null=True)
+	presence_six = models.NullBooleanField(null=True)
+	presence_twelve = models.NullBooleanField(null=True)
+	presence_thirteen = models.NullBooleanField(null=True)
+	presence_fourteen = models.NullBooleanField(null=True)
+	presence_fifteen = models.NullBooleanField(null=True)
+	presence_sixteen = models.NullBooleanField(null=True)
 	meal_price = models.FloatField(default=0)
 	hours_price = models.FloatField(default=0)
 
-	@property
-	def breakfast(self):
-		return self.presence_breakfast == Child.breakfast
+	# @property
+	# def breakfast(self):
+	# 	return self.presence_breakfast == Child.breakfast
 
-	@property
-	def brunch(self):
-		return self.presence_brunch == Child.brunch
+	# @property
+	# def brunch(self):
+	# 	return self.presence_brunch == Child.brunch
 
-	@property
-	def dinner(self):
-		return self.presence_dinner == Child.dinner
+	# @property
+	# def dinner(self):
+	# 	return self.presence_dinner == Child.dinner
 
-	@property
-	def supper(self):
-		return self.presence_supper == Child.supper
+	# @property
+	# def supper(self):
+	# 	return self.presence_supper == Child.supper
 
 # jeśli nieobecny -> wszytskie posiłki na null + wszytskie godziny dodatkowe na null
 # jeśli obecny --> posiłki i godziny dodatkowe przenosza sie z Child + można modyfikować posiłki (wszytskie) i godziny (tylko te spoza zadeklarowanych w umowie)

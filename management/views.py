@@ -2,43 +2,64 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Group, Child, Parent, Teacher, PresenceList
 from .forms import (LoginForm, PresenceDateForm, ChildForm, AddChildForm, 
-			PresenceListForm, AddTeacherForm)
+			PresenceListForm, HoursAndMealsForm, AddTeacherForm)
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
 
-class MainView(View):
+class LoginView(View):
 
 	def get(self, request):
 		form = LoginForm()
-		return render(request, "main_view.html", {"form": form})
+		return render(request, "login_view.html", {"form": form})
 
 	def post(self, request):
 		form = LoginForm(request.POST)
-		if form.is_valid():
-			login = form.cleaned_data['login']
-			return HttpResponseRedirect('/group')
+		if (form.is_valid()):
+			u = authenticate(username=form.cleaned_data['username'],
+				password=form.cleaned_data['password'])
+			if u is not None:
+				login(request, u)
+				return HttpResponseRedirect('/hello')
+		return HttpResponseRedirect('/')
 
 
-class ChildrenListView(View):
+class LogoutUserView(LoginRequiredMixin, View):
+
+	def get(self, request):
+		logout(request)
+		return HttpResponseRedirect('/')
+
+
+class MainView(LoginRequiredMixin, View):
+
+	def get(self, request):
+		return render(request, "main.html")
+
+
+class ChildrenListView(LoginRequiredMixin, View):
 
 	def get(self, request):
 		children = Child.objects.all().order_by("last_name")
-		return render(request, "children_list.html", {"children": children})
+		group = Group.objects.all()
+		return render(request, "children_list.html", {"children": children,
+														"group": group})
 		
 
-class GroupView(View):
+class GroupView(LoginRequiredMixin, View):
 
 	def get(self, request):
 		groups = Group.objects.all()
 		return render (request, "group_view.html", {"groups": groups})
 
 
-class GroupListView(View):
+class GroupListView(LoginRequiredMixin, View):
 
 	def get(self, request, group_id):
 		group = Group.objects.get(pk=group_id)
@@ -49,7 +70,7 @@ class GroupListView(View):
 														"children": children})
 
 
-class ChildView(View):
+class ChildView(LoginRequiredMixin, View):
 
 	def get(self, request, group_id, child_id):
 		group = Group.objects.get(pk=group_id)
@@ -76,7 +97,7 @@ class ChildView(View):
 			return HttpResponseRedirect('/group')
 
 
-class AddChildView(View):
+class AddChildView(LoginRequiredMixin, View):
 
 	def get(self, request, group_id):
 		group = Group.objects.get(pk=group_id)
@@ -101,7 +122,7 @@ class AddChildView(View):
 		return HttpResponseRedirect('/add_child')
 
 
-class PresenceDateView(View): 
+class PresenceDateView(LoginRequiredMixin, View): 
 
 	def get(self, request, group_id):
 		form = PresenceDateForm()
@@ -117,7 +138,7 @@ class PresenceDateView(View):
 		return HttpResponseRedirect('presence_date')
 
 
-class PresenceListView(View): 
+class PresenceListView(LoginRequiredMixin, View): 
 
 	def get(self, request, group_id, date):
 		group = Group.objects.get(pk=group_id)
@@ -130,17 +151,106 @@ class PresenceListView(View):
 	def post(self, request, group_id, date):
 		group = Group.objects.get(pk=group_id)
 		form = PresenceListForm(request.POST, date=date, group=group)
+
 		if form.is_valid():
 			for child in form.get_children(group=group):
-				PresenceList.objects.update_or_create(child=child, day=date, 
+
+				if child.start_hour < datetime.time(7):
+
+					if child.end_hour > datetime.time(12) and child.end_hour <= datetime.time(13):
+						six = True
+						twelve = True
+						thirteen = False
+						fourteen = False
+						fifteen = False
+						sixteen = False
+
+					elif child.end_hour > datetime.time(13) and child.end_hour <= datetime.time(14):
+						six = True
+						twelve = True
+						thirteen = True
+						fourteen = False
+						fifteen = False
+						sixteen = False
+
+					elif child.end_hour > datetime.time(14) and child.end_hour <= datetime.time(15):
+						six = True
+						fourteen = True
+						thirteen = True
+						twelve = True
+						sixteen = False
+						fifteen = False
+
+					elif child.end_hour > datetime.time(15) and child.end_hour <= datetime.time(16):
+						six = True
+						twelve = True
+						thirteen = True
+						fourteen = True
+						fifteen = True
+						sixteen = False
+
+					elif child.end_hour > datetime.time(16) and child.end_hour <= datetime.time(17):
+						six = True
+						twelve = True
+						thirteen = True
+						fourteen = True
+						fifteen = True
+						sixteen = True
+				###
+				elif child.start_hour > datetime.time(7):
+
+					if child.end_hour > datetime.time(12) and child.end_hour <= datetime.time(13):
+						six = False
+						twelve = True
+						thirteen = False
+						fourteen = False
+						fifteen = False
+						sixteen = False
+
+					elif child.end_hour > datetime.time(13) and child.end_hour <= datetime.time(14):
+						six = False
+						twelve = True
+						thirteen = True
+						fourteen = False
+						fifteen = False
+						sixteen = False
+						
+					elif child.end_hour > datetime.time(14) and child.end_hour <= datetime.time(15):
+						six = False
+						twelve = True
+						thirteen = True
+						fourteen = True
+						fifteen = False
+						sixteen = False
+				
+					elif child.end_hour > datetime.time(15) and child.end_hour <= datetime.time(16):
+						six = False
+						twelve = True
+						thirteen = True
+						fourteen = True
+						fifteen = True
+						sixteen = False
+
+					elif child.end_hour > datetime.time(16) and child.end_hour <= datetime.time(17):
+						six = False
+						twelve = True
+						thirteen = True
+						fourteen = True
+						fifteen = True
+						sixteen = True
+					
+				PresenceList.objects.update_or_create(child=child, day=date, presence_breakfast=child.breakfast,
+					presence_brunch=child.brunch, presence_dinner=child.dinner, presence_supper=child.supper, # przenoszę wartości pól dot. posiłków z modelu Child
+					presence_six=six, presence_twelve=twelve, presence_thirteen=thirteen, 
+					presence_fourteen=fourteen, presence_fifteen=fifteen, presence_sixteen=sixteen,
 					defaults = {
-					'present': form.cleaned_data.get('child_{}_present'.format(child.id), False)
+					'present': form.cleaned_data.get('child_{}_present'.format(child.id), False),
 					})
 			return HttpResponseRedirect(reverse('hours_and_meals', kwargs={"date": date, "group_id": group_id}))
 		return HttpResponseRedirect('hours_and_meals')
 			
 
-class HoursAndMealsView(View):
+class HoursAndMealsView(LoginRequiredMixin, View):
 
 	def get(self, request, group_id, date): 
 		group = Group.objects.get(pk=group_id)
@@ -151,15 +261,14 @@ class HoursAndMealsView(View):
 														"form": form})
 
 
-
-class TeachersView(View):
+class TeachersView(LoginRequiredMixin, View):
 
 	def get(self, request):
 		teachers = Teacher.objects.all().order_by("last_name")
 		return render(request, "teachers.html", {"teachers": teachers})
 
 
-class AddTeacherView(View):
+class AddTeacherView(LoginRequiredMixin, View):
 
 	def get(self,request):
 		form = AddTeacherForm()
