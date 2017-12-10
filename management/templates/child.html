@@ -8,6 +8,8 @@
 <form method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}
+<br>
+<button class="btn-default" type='submit'> <a href="/group/{{child.group_id}}/{{child.id}}/parents"> RODZICE </a> </button></p>
 <br><br>
 <input type="submit" />
 </form>

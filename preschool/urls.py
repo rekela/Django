@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from management.views import (LoginView, MainView, ChildrenListView, GroupView, GroupListView, 
-                        ChildView, AddChildView, PresenceDateView, PresenceListView, 
+                        ChildView, AddChildView, ParentsView, PresenceDateView, PresenceListView, 
                         HoursAndMealsView, TeachersView, AddTeacherView)
 
 urlpatterns = [
@@ -26,8 +26,9 @@ urlpatterns = [
     url(r'^children/$', ChildrenListView.as_view(), name="children"),
     url(r'^group/$', GroupView.as_view(), name="group"),
     url(r'^group/(?P<group_id>(\d)+)/$', GroupListView.as_view(), name="group_list"),
-    url(r'^group/(?P<group_id>(\d)+)/(?P<child_id>(\d)+)', ChildView.as_view(), name="child"),
+    url(r'^group/(?P<group_id>(\d)+)/(?P<child_id>(\d)+)$', ChildView.as_view(), name="child"),
     url(r'^group/(?P<group_id>(\d)+)/add_child', AddChildView.as_view(), name="add_child"),
+    url(r'^group/(?P<group_id>(\d)+)/(?P<child_id>(\d)+)/parents', ParentsView.as_view(), name="parents"),
     url(r'^group/(?P<group_id>(\d)+)/presence_date', PresenceDateView.as_view(), name="presence_date"),
     url(r'^group/(?P<group_id>(\d)+)/presence_list/(?P<date>(\d{4}-\d{2}-\d{2}))/$', 
         PresenceListView.as_view(), name="presence_list"),

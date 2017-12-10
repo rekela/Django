@@ -33,6 +33,11 @@ class AddChildForm(ModelForm):
 			'end_hour', 'breakfast', 'brunch', 'dinner', 'supper', 'group')
 
 
+class ParentsForm(ModelForm):
+	class Meta:
+		model = Parent
+		fields = ('first_name', 'last_name', 'phone_number', 'email', 'child')
+
 
 MEAL_LIST = (
 		(0, "śniadanie"),

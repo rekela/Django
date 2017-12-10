@@ -4,14 +4,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-# GROUP = (
-# 		(0, "Grupa 1"),
-# 		(1, "Grupa 2"),
-# 		(2, "Grupa 3"), 
-# 		(3, "Grupa 4")
-# 		)
-
-
 class Group(models.Model):
 	name = models.CharField(max_length=32)
 
@@ -39,28 +31,6 @@ class Child(models.Model):
 
 	def __str__(self):
 		return self.name
-
-
-	@property
-	def paid_hours(self):
-		paid_hours = 0 # zmienna do zliczania płatnych godzin
-		start = float(self.start_hour)
-		end = float(self.end_hour)
-		limit = 12 # zmienna do której przypisuję koniec bezpłatnych godzin (godz.12:00)
-
-		if kdr == 0:
-			while (limit < end):
-				paid_hours += 1
-				limit += 1
-			if start < 7:
-				paid_hours += 0.5
-		else:
-			while (limit < end):
-				paid_hours += 0.5
-				limit += 1
-			if start < 7:
-				paid_hours += 0.25
-		return paid_hours
 
 
 class Parent(models.Model):
@@ -127,21 +97,3 @@ class PresenceList(models.Model):
 	meal_price = models.FloatField(default=0)
 	hours_price = models.FloatField(default=0)
 
-	# @property
-	# def breakfast(self):
-	# 	return self.presence_breakfast == Child.breakfast
-
-	# @property
-	# def brunch(self):
-	# 	return self.presence_brunch == Child.brunch
-
-	# @property
-	# def dinner(self):
-	# 	return self.presence_dinner == Child.dinner
-
-	# @property
-	# def supper(self):
-	# 	return self.presence_supper == Child.supper
-
-# jeśli nieobecny -> wszytskie posiłki na null + wszytskie godziny dodatkowe na null
-# jeśli obecny --> posiłki i godziny dodatkowe przenosza sie z Child + można modyfikować posiłki (wszytskie) i godziny (tylko te spoza zadeklarowanych w umowie)

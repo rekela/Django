@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Group, Child, Parent, Teacher, PresenceList
-from .forms import (LoginForm, PresenceDateForm, ChildForm, AddChildForm, 
-			PresenceListForm, HoursAndMealsForm, AddTeacherForm)
+from .forms import (LoginForm, PresenceDateForm, ChildForm, AddChildForm, ParentsForm,
+	PresenceListForm, HoursAndMealsForm, AddTeacherForm) 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -30,7 +30,7 @@ class LoginView(View):
 		return HttpResponseRedirect('/')
 
 
-class LogoutUserView(LoginRequiredMixin, View):
+class LogoutUserView(View):
 
 	def get(self, request):
 		logout(request)
@@ -76,7 +76,9 @@ class ChildView(LoginRequiredMixin, View):
 		group = Group.objects.get(pk=group_id)
 		child = Child.objects.get(pk=child_id)
 		form = AddChildForm(instance=child)
-		return render(request, "child.html", {"form": form})
+		return render(request, "child.html", {"child": child,
+										"group": group,
+										"form": form})
 
 	def post(self, request, group_id, child_id):
 		group = Group.objects.get(pk=group_id)
@@ -120,6 +122,20 @@ class AddChildView(LoginRequiredMixin, View):
             group=form.cleaned_data['group'])
 			return HttpResponseRedirect('/group') 
 		return HttpResponseRedirect('/add_child')
+
+
+class ParentsView(LoginRequiredMixin, View):
+
+	def get(self, request, group_id, child_id):
+		group = Group.objects.get(pk=group_id)
+		child = Child.objects.get(pk=child_id)
+		parent = Parent.objects.get(child=child_id)
+		parent.child.all()
+		form = ParentsForm(instance=parent)
+		return render(request, "parent.html", {"child": child,
+											"parent": parent,
+											"group": group,
+											"form": form})
 
 
 class PresenceDateView(LoginRequiredMixin, View): 
@@ -283,4 +299,3 @@ class AddTeacherView(LoginRequiredMixin, View):
 			return HttpResponseRedirect('/group')
 		return HttpResponseRedirect('/teachers/add')
 
-# teachers = Teacher.objects.all()
