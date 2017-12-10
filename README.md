@@ -20,3 +20,5 @@ Main functionality of this application is to monthly calculate a fee for prescho
 - how many day a child was in fact in preschool, it makes difference according to additional hours and a charge for meals.
 
 Application will allow easily generate a receipt for a particular person basing on provided above (this functionality is still in development).
+
+More information in documentation.pdf
