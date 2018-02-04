@@ -3,8 +3,12 @@
 {% block content %}
 <h3> Rodzice </h3>
 <br/>
-<form>
-    {{ form.as_p }}
-    <input type="submit" />
-</form>
+
+{% for parent in parents %}
+	<form>
+    	{{ form.as_p }}
+    	<input type="submit" />
+	</form>
+{% endfor %}
+
 {% endblock %}

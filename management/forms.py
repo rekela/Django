@@ -14,7 +14,7 @@ class PresenceDateForm(Form):
 
 
 class ChildForm(Form):
-	first_name = forms.CharField(label='Imię')
+	first_name = forms.CharField(label='Dziecko')
 	last_name = forms.CharField(label='Nazwisko')
 	group = forms.RadioSelect()
 	start_hour = forms.TimeField(label='Godzina przyjścia')
@@ -33,10 +33,17 @@ class AddChildForm(ModelForm):
 			'end_hour', 'breakfast', 'brunch', 'dinner', 'supper', 'group')
 
 
-class ParentsForm(ModelForm):
-	class Meta:
-		model = Parent
-		fields = ('first_name', 'last_name', 'phone_number', 'email', 'child')
+# class ParentsForm(ModelForm):
+# 	class Meta:
+# 		model = Parent
+# 		fields = ('first_name', 'last_name', 'phone_number', 'email', 'child')
+
+class ParentsForm(Form):
+	first_name = forms.CharField(label='Imię')
+	last_name = forms.CharField(label='Nazwisko')
+	phone_number = forms.CharField(label='Numer telefonu')
+	email = forms.EmailField(label='e-mail')
+# 	#child = forms.ManyToManyField(label='Dziecko')
 
 
 MEAL_LIST = (

@@ -129,13 +129,28 @@ class ParentsView(LoginRequiredMixin, View):
 	def get(self, request, group_id, child_id):
 		group = Group.objects.get(pk=group_id)
 		child = Child.objects.get(pk=child_id)
-		parent = Parent.objects.get(child=child_id)
-		parent.child.all()
-		form = ParentsForm(instance=parent)
+		parents = Parent.objects.filter(child=child_id)
+		#parent.child.all()
+		#form = ParentsForm(instance=parents)
+		form = ParentsForm()
 		return render(request, "parent.html", {"child": child,
-											"parent": parent,
+											"parents": parents,
 											"group": group,
 											"form": form})
+
+	def post(self, request, group_id, child_id):
+		group = Group.objects.get(pk=group_id)
+		child = Child.objects.get(pk=child_id)
+		parents = Parent.objects.filter(child=child_id)
+		form = ParentsForm(request.POST)
+		if form.is_valid():
+			parents.first_name = form.cleaned_data['first_name']
+			parents.last_name = form.cleaned_data['last_name']
+			parents.phone_number = form.cleaned_data['phone_number']
+			parents.email = form.cleaned_data['email']
+			parents.save()
+			return HttpResponseRedirect('/group')
+
 
 
 class PresenceDateView(LoginRequiredMixin, View): 
